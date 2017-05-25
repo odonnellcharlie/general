@@ -1,0 +1,27 @@
+library(readxl)
+library(stringr)
+temp = list.files(pattern="*.xlsx")
+myfiles = lapply(temp, readWorksheet)
+
+final.df<-data.frame()
+#initialize dataframe
+for(i in 2:length(temp)){
+  df.add<-readxl::read_xlsx(temp[i])
+  #read excel file as dataframe
+  
+  df.add[,8]<-str_sub(temp[i])
+  ##add filename to new column
+  
+  final.df<-rbind(final.df,df.add)
+  #concatenate new dataframe to current dataframe
+  
+  print(i)
+ #print number of files
+}
+
+#filtering for just Patriots players
+final.df.pats<-final.df[final.df[,"Team"]=="Patriots",]
+
+#write full dataframe to csv
+#change year to whatever year
+write.csv(final.df.pats, "full.update.pats.[YEAR].csv")
